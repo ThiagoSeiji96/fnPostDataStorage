@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Cards com API</title>
+    <!-- Incluindo o Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .card { margin: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Lista de Cards</h1>
+        <div class="row" id="cardsContainer">
+            <!-- Os cards serão inseridos aqui via JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Exemplo de URL da API (substitua com sua URL real)
+        const apiUrl = 'http://localhost:7108/api/all';  // Aqui você coloca a URL da sua API
+
+        // Função para obter os dados da API e exibir os cards
+        async function fetchAndDisplayCards() {
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                const cardsContainer = document.getElementById('cardsContainer');
+                cardsContainer.innerHTML = '';  // Limpa os cards existentes
+
+                // Itera sobre os dados e cria os cards
+                data.forEach(item => {
+                    const card = `
+                        <div class="col-md-4">
+                            <div class="card">
+                                <img src="${item.thumb}" class="card-img-top" alt="Imagem">
+                                <div class="card-body">
+                                    <h5 class="card-title">${item.title}</h5>
+                                    <p class="card-text">Ano: ${item.year}</p>
+                                    <a href="${item.video}" class="btn btn-primary" target="_blank">Ver Vídeo</a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    cardsContainer.innerHTML += card;
+                });
+            } catch (error) {
+                console.error('Erro ao obter os dados da API:', error);
+            }
+        }
+
+        // Chama a função para exibir os cards quando a página carrega
+        window.onload = fetchAndDisplayCards;
+    </script>
+</body>
+</html>
